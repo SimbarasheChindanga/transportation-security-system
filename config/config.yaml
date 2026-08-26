@@ -1,0 +1,38 @@
+# ============================================================
+# CONFIGURATION FILE - Transportation Security System
+# ============================================================
+
+project:
+  name: "Transportation Security System"
+  version: "1.0.0"
+  author: "Simbarashe Chindanga"
+  description: "Driver monitoring and behavior analysis system"
+
+data:
+  raw_path: "data/raw/"
+  processed_path: "data/processed/"
+  sample_rate: 1  # seconds between samples
+  default_duration: 300  # seconds
+
+detection:
+  speed_limit: 60  # km/h
+  speed_tolerance: 1.1  # 10% over limit triggers violation
+  braking_threshold: -3.0  # m/s²
+  cornering_threshold: 2.0  # m/s²
+  ear_threshold: 0.25  # Eye Aspect Ratio threshold for fatigue
+
+scoring:
+  speed_penalty: 5  # points deducted per speeding event
+  braking_penalty: 3  # points deducted per braking event
+  cornering_penalty: 2  # points deducted per cornering event
+  max_score: 100
+  min_score: 0
+
+dashboard:
+  port: 8501
+  title: "Driver Safety Dashboard"
+  theme: "light"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

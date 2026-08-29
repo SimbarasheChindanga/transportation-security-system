@@ -31,8 +31,10 @@ The **Transportation Security System** is a comprehensive IT solution that monit
 - ✅ Fatigue detection using Eye Aspect Ratio (EAR)
 - ✅ Speeding, harsh braking, and harsh cornering detection
 - ✅ Driver scorecards (0-100 rating system)
-- ✅ Interactive dashboard for fleet managers
-
+- ✅ Interactive dashboard with filters and alerts
+- ✅ Export data to CSV (Excel compatible)
+- ✅ Live webcam feed with face detection
+- ✅ Safety notifications and alerts
 ---
 
 ## 📋 Business Problem
@@ -63,8 +65,6 @@ According to the **World Health Organization (WHO)**:
 ---
 
 ## 📊 Dataset
-
-## Dataset
 
 This project uses **synthetic (generated) data** for demonstration purposes. 
 The system is designed to work with real IoT sensors including:
@@ -310,19 +310,54 @@ EAR = (A + B) / (2 * C)
 
 ---
 
-## 📊 Dashboard Screenshots
+## 📊 Dashboard Screenshots## 
 
-### Driver Safety Dashboard
-![Dashboard](images/dashboard.png)
 
-### Driver Scores Chart
-![Scores](images/scores_chart.png)
+### Metrics & Charts
+![Dashboard Top](images/dashboard_top.png)
+*Key metrics and driver score/violations charts*
 
-### Violations Breakdown
-![Violations](images/violations_chart.png)
+### Status Distribution & Data Table
+![Dashboard Middle](images/dashboard_middle.png)
+*Driver status distribution and complete data table*
 
-### Driver Data Table
-![Data Table](images/data_table.png)
+### Export, Webcam & Alerts
+![Dashboard Bottom](images/dashboard_bottom.png)
+*CSV export, live face detection, and safety alerts*
+
+---
+
+*Full dashboard available when you run: `streamlit run Dashboard.py`*
+
+---
+
+
+
+
+
+
+
+## 🎛️ Dashboard Features
+
+### Interactive Filters
+- Status filter (All, Excellent, Good, Unsafe)
+- Score range slider (0-100)
+- Real-time updates
+
+### Export Data
+- Download filtered data as CSV
+- Excel compatible format
+
+### Live Webcam Feed
+- Real-time face detection
+- Start/Stop controls
+- Green box face indicator
+
+### Safety Alerts
+- Unsafe driver alerts (score < 50)
+- High violation alerts (> 20 violations)
+- Color-coded notifications
+
 
 ### Key Metrics Overview
 
@@ -374,10 +409,15 @@ cd transportation-security-system
 ```
 
 ###  Step 2: Create Virtual Environment
-
+```bash
 # Windows
 python -m venv venv
 venv\Scripts\activate
+
+# Linux/Mac
+python -m venv venv
+source venv/bin/activate
+```
 
 # Linux/Mac
 python -m venv venv
@@ -400,15 +440,15 @@ http://localhost:8501
 jupyter notebook
 Then open any notebook in the notebooks/ folder.
 
-### 💡 Recommendations
-## For Fleet Managers
 
-Recommendation	Implementation	Expected Impact
-Identify Unsafe Drivers	Use driver scorecards (0-100)	Target training for low performers
-Monitor Violation Patterns	Track speeding, braking, cornering	Reduce accidents by 30%
-Implement Safety Training	Focus on aggressive drivers	Improve overall safety scores
-Reward Safe Drivers	Recognize high performers	Encourage safe driving culture
+## 💡 Recommendations
 
+| Recommendation | Implementation | Expected Impact |
+|----------------|----------------|-----------------|
+| Identify Unsafe Drivers | Use driver scorecards (0-100) | Target training for low performers |
+| Monitor Violation Patterns | Track speeding, braking, cornering | Reduce accidents by 30% |
+| Implement Safety Training | Focus on aggressive drivers | Improve overall safety scores |
+| Reward Safe Drivers | Recognize high performers | Encourage safe driving culture |
 
 ## For System Improvements
 
@@ -445,15 +485,12 @@ Communication	Clear project presentation
 
 ## 👤 Author
 
- Simbarashe  Chindanga
+**Simbarashe Chindanga**
 
-💼 Portfolio: [Your Portfolio Link]
-
-📧 Email: [Your Email]
-
-🔗 LinkedIn: [Your LinkedIn URL]
-
-🐙 GitHub: [Your GitHub URL]
+- 💼 Portfolio: https://github.com/SimbarasheChindanga
+- 📧 Email: chindangasimbarashe02@gmail.com
+- 🔗 LinkedIn: [Your LinkedIn URL]
+- 🐙 GitHub: https://github.com/SimbarasheChindanga
 
 
 ## 📄 License

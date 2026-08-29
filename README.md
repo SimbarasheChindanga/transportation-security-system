@@ -487,9 +487,14 @@ Communication	Clear project presentation
 
 **Simbarashe Chindanga**
 
+Role: Transport Technology Specialist
+
+Focus: Supply Chain Visibility, Data Analytics, Full-Stack Development
+
+Location: Zimbabwe 🇿🇼
+
 - 💼 Portfolio: https://github.com/SimbarasheChindanga
 - 📧 Email: chindangasimbarashe02@gmail.com
-- 🔗 LinkedIn: [Your LinkedIn URL]
 - 🐙 GitHub: https://github.com/SimbarasheChindanga
 
 

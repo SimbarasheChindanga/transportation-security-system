@@ -26,6 +26,7 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import os
+from pathlib import Path
 
 
 # ============================================================
@@ -72,7 +73,8 @@ st.subheader("Driver Safety Dashboard")
 # 
 # ============================================================
 
-csv_path = 'data/processed/driver_data_processed.csv'
+PROJECT_ROOT = Path(__file__).resolve().parent
+csv_path = PROJECT_ROOT / 'data' / 'processed' / 'driver_data_processed.csv'
 
 if os.path.exists(csv_path):
     df = pd.read_csv(csv_path)
@@ -82,7 +84,7 @@ else:
         'Driver ID': [1, 2, 3, 4, 5, 6, 7, 8, 10],
         'Driving Style': ['Safe', 'Safe', 'Safe', 'Normal', 'Normal', 'Normal', 
                           'Aggressive', 'Aggressive', 'Unsafe'],
-        'Score': [100, 98, 98, 82, 79, 77, 45, 35, 0],
+        'Score': [100, 98, 98, 83, 78, 75, 31, 16, 0],
         'Speeding Violations': [0, 0, 0, 2, 3, 3, 8, 10, 15],
         'Braking Violations': [0, 0, 0, 1, 1, 2, 5, 6, 13],
         'Cornering Violations': [0, 1, 1, 2, 2, 2, 7, 8, 9],
@@ -441,105 +443,190 @@ st.caption("🚛 Transportation Security System | Built with Streamlit | © 2026
 
 
 # ============================================================
-# SECTION 13: LIVE WEBCAM FEED  ← STAGE 3
-# ============================================================
-# 
-# WHAT WE'RE DOING:
-# Adding real-time face detection using your computer's webcam.
-# 
-# WHY:
-# - Shows employers you can work with live video data
-# - Demonstrates real-world computer vision skills
-# - Makes the project more impressive for interviews
-# 
-# HOW IT WORKS:
-# 1. User clicks "Start Camera"
-# 2. Browser asks for camera permission (allow it)
-# 3. OpenCV captures video frames
-# 4. Face detection runs on each frame
-# 5. Green boxes appear around detected faces
-# 6. User clicks "Stop Camera" to end
-# 
-# TECHNICAL DETAILS:
-# - Uses OpenCV's Haar Cascade for face detection
-# - Processes frames in real-time
-# - Displays video in Streamlit
-# - Works with any webcam
-# 
+# SECTION 13: CAMERA SNAPSHOT FACE DETECTION & FATIGUE ANALYSIS
 # ============================================================
 
 st.markdown("---")
-st.subheader("📷 Live Driver Monitoring")
+st.subheader("Driver Face-Detection Snapshot")
 
-st.info("""
-**How it works:**
-1. Click "Start Camera" to begin
-2. The system detects faces in real-time
-3. Press "Stop" when finished
+st.caption(
+    "Optional browser-camera snapshot for demonstration. "
+    "The EAR result is a preliminary eye-closure indicator, "
+    "not a validated driver-safety assessment."
+)
 
-*Note: Your webcam will be activated. Allow camera access when prompted.*
-""")
+# Camera is OFF by default.
+if "camera_enabled" not in st.session_state:
+    st.session_state["camera_enabled"] = False
 
-# Check if OpenCV is available
-try:
-    import cv2
-    OPENCV_AVAILABLE = True
-except ImportError:
-    OPENCV_AVAILABLE = False
-    st.error("⚠️ OpenCV is not installed. Please run: pip install opencv-python")
+st.toggle(
+    "Enable camera",
+    key="camera_enabled",
+    help="Turn this off to remove the camera widget."
+)
 
-if OPENCV_AVAILABLE:
-    # Session state for camera control
-    if 'camera_running' not in st.session_state:
-        st.session_state.camera_running = False
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("▶️ Start Camera"):
-            st.session_state.camera_running = True
-    
-    with col2:
-        if st.button("⏹️ Stop Camera"):
-            st.session_state.camera_running = False
-    
-    # Camera placeholder
-    frame_placeholder = st.empty()
-    
-    # Load face detector
-    cascade = cv2.CascadeClassifier(
-        cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
-    )
-    
-    if st.session_state.camera_running:
-        cap = cv2.VideoCapture(0)
-        
-        while st.session_state.camera_running:
-            ret, frame = cap.read()
-            if not ret:
-                st.warning("⚠️ Could not access webcam. Please check your camera.")
-                break
-            
-            # Convert to grayscale for detection
-            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            
-            # Detect faces
-            faces = cascade.detectMultiScale(gray, 1.1, 5)
-            
-            # Draw rectangles around faces
-            for (x, y, w, h) in faces:
-                cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 3)
-                cv2.putText(frame, 'Face Detected', (x, y-10),
-                           cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
-            
-            # Display the frame
-            frame_placeholder.image(frame, channels="BGR", use_container_width=True)
-            
-        # Release camera when stopped
-        cap.release()
+if st.session_state["camera_enabled"]:
+    try:
+        import cv2
+        import numpy as np
+        import dlib
+
+        from src.driver_monitoring.face_detection import FaceDetector
+        from src.driver_monitoring.fatigue_detection import FatigueAnalyzer
+
+        camera_image = st.camera_input(
+            "Take a driver-monitoring snapshot",
+            key="driver_snapshot"
+        )
+
+        if camera_image is not None:
+            image_bytes = np.frombuffer(
+                camera_image.getvalue(), dtype=np.uint8
+            )
+            frame = cv2.imdecode(image_bytes, cv2.IMREAD_COLOR)
+
+            if frame is None:
+                st.error("Could not read the image. Please try again.")
+            else:
+                # Keep the existing OpenCV face detection and display.
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                cascade_path = (
+                    cv2.data.haarcascades
+                    + "haarcascade_frontalface_default.xml"
+                )
+                cascade = cv2.CascadeClassifier(cascade_path)
+
+                if cascade.empty():
+                    st.error("OpenCV's face-detection cascade could not load.")
+                    faces = []
+                else:
+                    faces = cascade.detectMultiScale(
+                        gray,
+                        scaleFactor=1.1,
+                        minNeighbors=5,
+                        minSize=(30, 30)
+                    )
+
+                # For this single-driver demo, keep only the largest
+                # detection to reduce background false positives.
+                if len(faces) > 1:
+                    largest_face = max(
+                        faces,
+                        key=lambda box: int(box[2]) * int(box[3])
+                    )
+                    faces = [largest_face]
+
+                # Draw the selected OpenCV face rectangle.
+                for (x, y, w, h) in faces:
+                    cv2.rectangle(
+                        frame,
+                        (int(x), int(y)),
+                        (int(x + w), int(y + h)),
+                        (0, 255, 0),
+                        2
+                    )
+
+                st.image(
+                    cv2.cvtColor(frame, cv2.COLOR_BGR2RGB),
+                    caption=f"Faces detected: {len(faces)}",
+                    use_container_width=True
+                )
+
+                if len(faces) == 0:
+                    st.warning(
+                        "No face detected. Retake the snapshot with your "
+                        "face clearly visible."
+                    )
+                else:
+                    detector = FaceDetector()
+
+                    if detector.predictor is None:
+                        st.warning(
+                            "The facial landmark model is unavailable. "
+                            "Check notebooks/shape_predictor_68_face_landmarks.dat."
+                        )
+                    else:
+                        # First try dlib's detector; fall back to the OpenCV box
+                        # if dlib cannot locate a face in this snapshot.
+                        dlib_faces = detector.detect_faces_dlib(frame)
+
+                        if dlib_faces:
+                            face_rect = max(
+                                dlib_faces,
+                                key=lambda face: face.width() * face.height()
+                            )
+                            detection_method = "dlib face detector"
+                        else:
+                            x, y, w, h = max(
+                                faces,
+                                key=lambda box: int(box[2]) * int(box[3])
+                            )
+
+                            margin_x = int(w * 0.15)
+                            margin_top = int(h * 0.20)
+                            margin_bottom = int(h * 0.10)
+
+                            left = max(0, int(x - margin_x))
+                            top = max(0, int(y - margin_top))
+                            right = min(frame.shape[1] - 1, int(x + w + margin_x))
+                            bottom = min(frame.shape[0] - 1, int(y + h + margin_bottom))
+
+                            face_rect = dlib.rectangle(left, top, right, bottom)
+                            detection_method = "OpenCV face-box fallback"
+
+                        try:
+                            landmarks = detector.get_landmarks(frame, face_rect)
+
+                            if landmarks is None:
+                                st.warning(
+                                    "Could not extract facial landmarks from "
+                                    "the detected face. Try another snapshot "
+                                    "with your full face visible."
+                                )
+                            else:
+                                analyzer = FatigueAnalyzer()
+                                result = analyzer.analyze_landmarks(landmarks)
+
+                                if result.get("average_ear") is not None:
+                                    st.metric(
+                                        "Average Eye Aspect Ratio (EAR)",
+                                        f"{result['average_ear']:.4f}"
+                                    )
+                                    st.caption(
+                                        f"Landmark region source: {detection_method}"
+                                    )
+
+                                ear = result.get("average_ear")
+                                if ear is None:
+                                    st.info("Eye status could not be determined.")
+                                elif ear < analyzer.ear_threshold:
+                                    st.warning(
+                                        "Low EAR in this snapshot: possible eye "
+                                        "closure. A single image cannot establish fatigue."
+                                    )
+                                else:
+                                    st.info(
+                                        "EAR is above the prototype threshold in "
+                                        "this snapshot. This does not confirm driver alertness."
+                                    )
+
+                                st.caption(
+                                    "Snapshot-based demonstration only: this capture "
+                                    "does not measure eye-closure duration or provide "
+                                    "continuous fatigue monitoring."
+                                )
+
+                        except (ValueError, RuntimeError) as exc:
+                            st.warning(f"Eye analysis could not be completed: {exc}")
+
+    except ImportError as exc:
+        st.error(f"Camera or fatigue dependencies are missing: {exc}")
+    except Exception as exc:
+        st.error(f"Camera analysis failed: {exc}")
+else:
+    st.info("Camera is OFF. Enable it only when needed.")
 
 
-# ============================================================
 # SECTION 14: NOTIFICATIONS & ALERTS  ← STAGE 4
 # ============================================================
 # 

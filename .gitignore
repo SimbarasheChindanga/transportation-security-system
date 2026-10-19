@@ -92,3 +92,10 @@ models/
 # Uploads
 uploads/
 downloads/
+
+# Local camera captures and development backups
+camera_test.jpg
+Dashboard_broken.py
+Dashboard_ready.py
+*.dat.bz2
+README_review_notes.md

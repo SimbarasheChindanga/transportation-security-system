@@ -75,17 +75,21 @@ The codebase also contains a synthetic-data generation notebook and a data gener
 
 These style labels are descriptive categories in the sample data, not independently validated driving classifications.
 
-### Sample data
-
 ### Sample Data
 
-| Driver ID | Style | Score | Speeding | Braking | Cornering |
-|---|---|---:|---:|---:|---:|
-| 1 | Safe | 100 | 0 | 0 | 0 |
-| 2 | Safe | 98 | 0 | 0 | 1 |
-| 3 | Normal | 83 | 2 | 1 | 2 |
----
+The processed sample dataset contains nine driver records.
 
+| Driver ID | Driving Style | Score | Speeding | Braking | Cornering | Status | Total Violations |
+|---:|---|---:|---:|---:|---:|---|---:|
+| 1 | Safe | 100 | 0 | 0 | 0 | Excellent | 0 |
+| 2 | Safe | 98 | 0 | 0 | 1 | Excellent | 1 |
+| 3 | Safe | 98 | 0 | 0 | 1 | Excellent | 1 |
+| 4 | Normal | 83 | 2 | 1 | 2 | Good | 5 |
+| 5 | Normal | 78 | 3 | 1 | 2 | Good | 6 |
+| 6 | Normal | 75 | 3 | 2 | 2 | Good | 7 |
+| 7 | Aggressive | 31 | 8 | 5 | 7 | Unsafe | 20 |
+| 8 | Aggressive | 16 | 10 | 6 | 8 | Unsafe | 24 |
+| 10 | Unsafe | 0 | 15 | 13 | 9 | Unsafe | 37 |
 ## 🛠 Technologies & Libraries
 
 | Category | Technology | Purpose in this project |
@@ -278,11 +282,9 @@ The figures below are calculated from the included `data/processed/driver_data_p
 
 ![Camera Snapshot Interface](images/camera_snapshot_interface.png)
 
-*Snapshot-based camera interface. This demonstration does not measure eye-closure duration or provide continuous fatigue monitoring.*
-
 ### Safety Alerts & Notifications
 
-![Safety Alerts and Notifications](images/safety_alerts_panel.png)
+![Safety Alerts Panel](images/safety_alerts_panel.png)
 
 *Example safety alerts showing driver scores and violation warnings.*
 

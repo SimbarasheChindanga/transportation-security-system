@@ -291,9 +291,7 @@ EAR = (A + B) / (2 * C)
 
 ---
 
-## Ã°Å¸â€œÅ  Dashboard Screenshots 
-
-
+## Dashboard Screenshots
 ### Metrics & Charts
 ![Dashboard Top](images/dashboard_top.png)
 *Key metrics and driver score/violations charts*
@@ -491,3 +489,4 @@ Location: Zimbabwe Ã°Å¸â€¡Â¿Ã°Å¸â€¡Â¼
 
 ## Ã°Å¸â€œâ€ž License
 No open-source license has been specified for this project.
+

@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 # 🚛 TRANSPORTATION SECURITY SYSTEM - DASHBOARD
 # ============================================================
 # 
@@ -101,10 +101,10 @@ else:
 # Adding a "Status" column based on the driver's score.
 # 
 # SCORING RULES:
-# - 90-100: ✅ Excellent (Safe driver)
-# - 70-89:  👍 Good (Some minor violations)
-# - 50-69:  ⚠️ Needs Improvement (Too many violations)
-# - 0-49:   🚨 Unsafe (Dangerous driver)
+# - 90-100: Excellent (Safe driver)
+# - 70-89:  Good (Some minor violations)
+# - 50-69:  Needs Improvement (Too many violations)
+# - 0-49:   Unsafe (Dangerous driver)
 # 
 # WHY: Makes it easy to categorize drivers at a glance.
 # 
@@ -112,13 +112,13 @@ else:
 
 def get_status(score):
     if score >= 90:
-        return "✅ Excellent"
+        return "Excellent"
     elif score >= 70:
-        return "👍 Good"
+        return "Good"
     elif score >= 50:
-        return "⚠️ Needs Improvement"
+        return "Needs Improvement"
     else:
-        return "🚨 Unsafe"
+        return "Unsafe"
 
 df['Status'] = df['Score'].apply(get_status)
 df['Total Violations'] = df['Speeding Violations'] + df['Braking Violations'] + df['Cornering Violations']
@@ -193,11 +193,11 @@ with col2:
     st.metric("Average Score", f"{avg_score:.1f}/100")
 
 with col3:
-    unsafe_count = len(filtered_df[filtered_df['Status'] == '🚨 Unsafe'])
+    unsafe_count = len(filtered_df[filtered_df['Status'] == 'Unsafe'])
     st.metric("Unsafe Drivers", unsafe_count)
 
 with col4:
-    safe_count = len(filtered_df[filtered_df['Status'] == '✅ Excellent'])
+    safe_count = len(filtered_df[filtered_df['Status'] == 'Excellent'])
     st.metric("Safe Drivers", safe_count)
 
 st.markdown("---")
@@ -231,10 +231,10 @@ with col1:
         title='Driver Safety Scores',
         text='Score',
         color_discrete_map={
-            '✅ Excellent': '#00cc44',
-            '👍 Good': '#3498db',
-            '⚠️ Needs Improvement': '#f39c12',
-            '🚨 Unsafe': '#e74c3c'
+            'Excellent': '#00cc44',
+            'Good': '#3498db',
+            'Needs Improvement': '#f39c12',
+            'Unsafe': '#e74c3c'
         }
     )
     fig1.update_traces(textposition='outside')
@@ -283,10 +283,10 @@ with col2:
 # Showing what percentage of drivers fall into each category.
 # 
 # CATEGORIES:
-# - ✅ Excellent (Green)
-# - 👍 Good (Blue)
-# - ⚠️ Needs Improvement (Orange)
-# - 🚨 Unsafe (Red)
+# - Excellent (Green)
+# - Good (Blue)
+# - Needs Improvement (Orange)
+# - Unsafe (Red)
 # 
 # WHY: Shows the overall health of the fleet at a glance.
 # 
@@ -308,10 +308,10 @@ with col1:
         title='Driver Status Distribution',
         color='Status',
         color_discrete_map={
-            '✅ Excellent': '#00cc44',
-            '👍 Good': '#3498db',
-            '⚠️ Needs Improvement': '#f39c12',
-            '🚨 Unsafe': '#e74c3c'
+            'Excellent': '#00cc44',
+            'Good': '#3498db',
+            'Needs Improvement': '#f39c12',
+            'Unsafe': '#e74c3c'
         },
         hole=0.4
     )
@@ -338,9 +338,9 @@ with col2:
             f"{filtered_df['Score'].max()}/100",
             f"{filtered_df['Score'].min()}/100",
             filtered_df['Total Violations'].sum(),
-            len(filtered_df[filtered_df['Status'] == '✅ Excellent']),
-            len(filtered_df[filtered_df['Status'] == '👍 Good']),
-            len(filtered_df[filtered_df['Status'] == '🚨 Unsafe'])
+            len(filtered_df[filtered_df['Status'] == 'Excellent']),
+            len(filtered_df[filtered_df['Status'] == 'Good']),
+            len(filtered_df[filtered_df['Status'] == 'Unsafe'])
         ]
     }
     summary_df = pd.DataFrame(summary_data)
@@ -398,13 +398,13 @@ st.subheader("📥 Export Data")
 export_df = filtered_df.copy()
 
 def clean_status_for_export(status):
-    if status == "✅ Excellent":
+    if status == "Excellent":
         return "Excellent"
-    elif status == "👍 Good":
+    elif status == "Good":
         return "Good"
-    elif status == "⚠️ Needs Improvement":
+    elif status == "Needs Improvement":
         return "Needs Improvement"
-    elif status == "🚨 Unsafe":
+    elif status == "Unsafe":
         return "Unsafe"
     else:
         return status
@@ -713,3 +713,4 @@ else:
 # ============================================================
 # END OF DASHBOARD.PY
 # ============================================================
+

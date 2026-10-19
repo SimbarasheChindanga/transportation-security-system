@@ -1,10 +1,10 @@
-﻿# Ã°Å¸Å¡â€º Transportation Security System
+# Transportation Security System
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.8.0-green)
 ![Streamlit](https://img.shields.io/badge/Streamlit-1.28.0-red)
 
-## Ã°Å¸â€œâ€¹ Table of Contents
+## Table of Contents
 - [Overview](#-overview)
 - [Business Problem](#-business-problem)
 - [Dataset](#-dataset)
